@@ -3,6 +3,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'Autodeploy WORKSSSSSSSS';
+    return 'autodeploy completed, start postgres instalation';
   }
 }
