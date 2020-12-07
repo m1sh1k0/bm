@@ -7,6 +7,8 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
+import { EnterpriseModule } from './enterprise/enterprise.module';
+import { PointModule } from './point/point.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { SharedModule } from './shared/shared.module';
     SharedModule,
     UserModule,
     AuthModule,
+    EnterpriseModule,
+    PointModule,
   ],
   controllers: [AppController],
   providers: [AppService],
