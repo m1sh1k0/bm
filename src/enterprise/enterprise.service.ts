@@ -4,10 +4,14 @@ import { CreateEnterpriseDto } from './dto/create-enterprise.dto';
 import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
 import { Enterprise } from './entities/enterprise.entity';
 import { EnterpriseExceptions } from './enterprise.exeptions';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class EnterpriseService {
-  constructor(private readonly enterpriseRepository: Repository<Enterprise>) {}
+  constructor(
+    @InjectRepository(Enterprise)
+    private readonly enterpriseRepository: Repository<Enterprise>,
+  ) {}
   async create(createEnterpriseDto: CreateEnterpriseDto) {
     return await this.enterpriseRepository.save(createEnterpriseDto);
   }
@@ -25,10 +29,9 @@ export class EnterpriseService {
   async update(id: number, updateEnterpriseDto: UpdateEnterpriseDto) {
     const enterprise = await this.enterpriseRepository.findOne(id);
     if (!enterprise) new EnterpriseExceptions.EnterpriseNotFound(id);
-    return await this.enterpriseRepository.save(
-      enterprise,
-      updateEnterpriseDto,
-    );
+    console.log(updateEnterpriseDto);
+
+    return await this.enterpriseRepository.save(enterprise);
   }
 
   async remove(id: number) {
