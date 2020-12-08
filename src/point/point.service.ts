@@ -29,7 +29,8 @@ export class PointService {
   async update(id: number, updatePointDto: UpdatePointDto) {
     const point = await this.pointRepository.findOne(id);
     if (!point) new LocationExceptions.LocationNotFound(id);
-    return this.pointRepository.save(point, updatePointDto);
+    Object.assign(point, updatePointDto);
+    return this.pointRepository.save(point);
   }
 
   async remove(id: number) {

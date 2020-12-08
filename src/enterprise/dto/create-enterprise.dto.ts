@@ -12,7 +12,7 @@ export class CreateEnterpriseDto {
 
   @ApiProperty()
   @IsString()
-  adress?: string;
+  address?: string;
 
   @ApiProperty()
   @IsString()

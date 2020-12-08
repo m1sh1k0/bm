@@ -29,8 +29,7 @@ export class EnterpriseService {
   async update(id: number, updateEnterpriseDto: UpdateEnterpriseDto) {
     const enterprise = await this.enterpriseRepository.findOne(id);
     if (!enterprise) new EnterpriseExceptions.EnterpriseNotFound(id);
-    console.log(updateEnterpriseDto);
-
+    Object.assign(enterprise, updateEnterpriseDto);
     return await this.enterpriseRepository.save(enterprise);
   }
 

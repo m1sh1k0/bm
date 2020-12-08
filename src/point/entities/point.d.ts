@@ -1,4 +1,4 @@
-export class CreatePointDto {
+export interface IPoint {
   name: string;
   address: string;
   description: string;
