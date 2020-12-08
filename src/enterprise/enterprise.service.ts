@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { CreateEnterpriseDto } from './dto/create-enterprise.dto';
 import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
+import { Enterprise } from './entities/enterprise.entity';
+import { EnterpriseExceptions } from './enterprise.exeptions';
 
 @Injectable()
 export class EnterpriseService {
-  create(createEnterpriseDto: CreateEnterpriseDto) {
-    return 'This action adds a new enterprise';
+  constructor(private readonly enterpriseRepository: Repository<Enterprise>) {}
+  async create(createEnterpriseDto: CreateEnterpriseDto) {
+    return await this.enterpriseRepository.save(createEnterpriseDto);
   }
 
-  findAll() {
-    return `This action returns all enterprise`;
+  async findAll() {
+    return await this.enterpriseRepository.findAndCount();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} enterprise`;
+  async findOne(id: number) {
+    const enterprise = await this.enterpriseRepository.findOne(id);
+    if (!enterprise) new EnterpriseExceptions.EnterpriseNotFound(id);
+    return;
   }
 
-  update(id: number, updateEnterpriseDto: UpdateEnterpriseDto) {
-    return `This action updates a #${id} enterprise`;
+  async update(id: number, updateEnterpriseDto: UpdateEnterpriseDto) {
+    const enterprise = await this.enterpriseRepository.findOne(id);
+    if (!enterprise) new EnterpriseExceptions.EnterpriseNotFound(id);
+    return await this.enterpriseRepository.save(
+      enterprise,
+      updateEnterpriseDto,
+    );
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} enterprise`;
   }
 }

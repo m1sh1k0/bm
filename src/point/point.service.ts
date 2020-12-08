@@ -3,27 +3,31 @@ import { Repository } from 'typeorm';
 import { CreatePointDto } from './dto/create-point.dto';
 import { UpdatePointDto } from './dto/update-point.dto';
 import { Point } from './entities/point.entity';
-
+import { LocationExceptions } from './point.exeptions';
 @Injectable()
 export class PointService {
-  constructor() {}
-  create(createPointDto: CreatePointDto) {
-    return 'This action adds a new point';
+  constructor(private readonly pointRepository: Repository<Point>) {}
+  async create(createPointDto: CreatePointDto) {
+    return await this.pointRepository.save(createPointDto);
   }
 
-  findAll() {
-    return `This action returns all point`;
+  async findAll() {
+    return await this.pointRepository.findAndCount();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} point`;
+  async findOne(id: number) {
+    const point = await this.pointRepository.findOne(id);
+    if (!point) new LocationExceptions.LocationNotFound(id);
+    return point;
   }
 
-  update(id: number, updatePointDto: UpdatePointDto) {
-    return `This action updates a #${id} point`;
+  async update(id: number, updatePointDto: UpdatePointDto) {
+    const point = await this.pointRepository.findOne(id);
+    if (!point) new LocationExceptions.LocationNotFound(id);
+    return this.pointRepository.save(point, updatePointDto);
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} point`;
   }
 }
