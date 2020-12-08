@@ -25,9 +25,10 @@ import {
 import { PointService } from './point.service';
 import { CreatePointDto } from './dto/create-point.dto';
 import { UpdatePointDto } from './dto/update-point.dto';
+
 @ApiTags('Point')
 @ApiBearerAuth()
-@Controller('point')
+@Controller('enterprise/point')
 export class PointController {
   constructor(private readonly pointService: PointService) {}
 
