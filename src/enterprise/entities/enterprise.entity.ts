@@ -5,14 +5,14 @@ import { IEnterprise } from './enterprise';
 @Entity('enterprise')
 export class Enterprise extends BaseEntity implements IEnterprise {
   @Column({ nullable: false })
-  name: string;
+  public name!: string;
 
-  @Column()
-  description: string;
+  @Column({ nullable: true })
+  public description!: string;
 
-  @Column()
-  address: string;
+  @Column({ nullable: true })
+  public address!: string;
 
-  @Column()
-  image: string;
+  @Column({ nullable: true })
+  public image!: string;
 }

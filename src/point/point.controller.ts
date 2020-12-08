@@ -21,12 +21,11 @@ import {
   ApiTags,
   ApiConsumes,
 } from '@nestjs/swagger';
-
 import { PointService } from './point.service';
 import { CreatePointDto } from './dto/create-point.dto';
 import { UpdatePointDto } from './dto/update-point.dto';
 
-@ApiTags('Point')
+@ApiTags('Enterprise/Point')
 @ApiBearerAuth()
 @Controller('enterprise/point')
 export class PointController {
