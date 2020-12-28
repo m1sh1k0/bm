@@ -1,18 +1,32 @@
-import { Entity, Column } from 'typeorm';
+import { Point } from 'src/point/entities/point.entity';
+import { User } from 'src/user/user.entity';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../shared/base.entity';
 import { IEnterprise } from './enterprise';
 
 @Entity('enterprise')
 export class Enterprise extends BaseEntity implements IEnterprise {
-  @Column({ nullable: false })
+  @Column()
   public name!: string;
 
-  @Column({ nullable: true })
-  public description!: string;
+  @Column()
+  public description: string;
 
-  @Column({ nullable: true })
-  public address!: string;
+  @Column()
+  public address: string;
 
-  @Column({ nullable: true })
-  public image!: string;
+  @Column()
+  public image: string;
+
+  @ManyToOne(
+    () => User,
+    user => user.enterprises,
+  )
+  user: User;
+
+  @OneToMany(
+    () => Point,
+    point => point.enterprise,
+  )
+  points: Point[];
 }

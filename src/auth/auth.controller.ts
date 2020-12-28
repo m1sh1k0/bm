@@ -1,5 +1,13 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from 'src/user/user.decorator';
 import { AuthDto } from './auth.dto';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt.guard';
@@ -14,6 +22,7 @@ export class AuthController {
   public register(@Body() authDto: AuthDto) {
     return this.authService.register(authDto);
   }
+
   @ApiOperation({ summary: 'User login' })
   @Post('login')
   public login(@Body() AuthDto: AuthDto) {
@@ -22,8 +31,8 @@ export class AuthController {
 
   @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
-  @Post('test')
-  public test(@Request() req) {
-    return req.user;
+  @Get('user')
+  public test(@User() user) {
+    return user;
   }
 }

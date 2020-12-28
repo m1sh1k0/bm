@@ -5,7 +5,7 @@ import { classToPlain } from 'class-transformer';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
-import { UserEntity } from 'src/user/user.entity';
+import { User } from 'src/user/user.entity';
 import { ApiConfigService } from 'src/shared/config.service';
 import { AuthDto } from './auth.dto';
 import { AuthExceptions } from './auth.exceptions';
@@ -13,8 +13,8 @@ import { AuthExceptions } from './auth.exceptions';
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly configService: ApiConfigService,
     private readonly jwtService: JwtService,
   ) {}
@@ -33,7 +33,7 @@ export class AuthService {
       this.configService.SALT_ROUNDS,
     );
 
-    const user = UserEntity.serealize(await this.userRepository.save(authDto));
+    const user = User.serealize(await this.userRepository.save(authDto));
     const token = this.jwtService.sign(classToPlain(user));
 
     return {
@@ -58,7 +58,7 @@ export class AuthService {
       throw new AuthExceptions.InvalidCredentials();
     }
 
-    const user = UserEntity.serealize(dbUser);
+    const user = User.serealize(dbUser);
     const token = this.jwtService.sign(classToPlain(user));
 
     return {

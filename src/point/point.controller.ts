@@ -12,28 +12,23 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiTags,
-  ApiConsumes,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { PointService } from './point.service';
 import { CreatePointDto } from './dto/create-point.dto';
 import { UpdatePointDto } from './dto/update-point.dto';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { UserEnterprise } from 'src/user/user.decorator';
 
 @ApiTags('Enterprise/Point')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('enterprise/point')
 export class PointController {
   constructor(private readonly pointService: PointService) {}
 
   @Post()
-  create(@Body() createPointDto: CreatePointDto) {
-    return this.pointService.create(createPointDto);
+  create(@Body() createPointDto: CreatePointDto, @UserEnterprise() enterprise) {
+    return this.pointService.create(createPointDto, enterprise);
   }
 
   @Get()

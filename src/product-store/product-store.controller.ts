@@ -22,7 +22,7 @@ import {
 
 @ApiTags('Store')
 @ApiBearerAuth()
-@Controller('enterpeise/point/store')
+@Controller('enterprise/point/store')
 export class ProductStoreController {
   constructor(private readonly productStoreService: ProductStoreService) {}
 

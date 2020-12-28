@@ -5,6 +5,7 @@ import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
 import { Enterprise } from './entities/enterprise.entity';
 import { EnterpriseExceptions } from './enterprise.exeptions';
 import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class EnterpriseService {
@@ -12,18 +13,26 @@ export class EnterpriseService {
     @InjectRepository(Enterprise)
     private readonly enterpriseRepository: Repository<Enterprise>,
   ) {}
-  async create(createEnterpriseDto: CreateEnterpriseDto) {
-    return await this.enterpriseRepository.save(createEnterpriseDto);
+  async create(createEnterpriseDto: CreateEnterpriseDto, user: User) {
+    const enterprise = new Enterprise();
+    const data = { ...createEnterpriseDto, user };
+    Object.assign(enterprise, data);
+
+    return await this.enterpriseRepository.save(enterprise);
   }
 
   async findAll() {
-    return await this.enterpriseRepository.findAndCount();
+    return await this.enterpriseRepository.findAndCount({
+      relations: ['user'],
+    });
   }
 
   async findOne(id: number) {
-    const enterprise = await this.enterpriseRepository.findOne(id);
+    const enterprise = await this.enterpriseRepository.findOne(id, {
+      relations: ['user'],
+    });
     if (!enterprise) new EnterpriseExceptions.EnterpriseNotFound(id);
-    return;
+    return enterprise;
   }
 
   async update(id: number, updateEnterpriseDto: UpdateEnterpriseDto) {

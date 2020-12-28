@@ -12,28 +12,23 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiTags,
-  ApiConsumes,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { EnterpriseService } from './enterprise.service';
 import { CreateEnterpriseDto } from './dto/create-enterprise.dto';
 import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
+import { JwtAuthGuard } from 'src/auth/jwt.guard';
+import { User } from 'src/user/user.decorator';
 
 @ApiTags('Enterprise')
 @ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
 @Controller('enterprise')
 export class EnterpriseController {
   constructor(private readonly enterpriseService: EnterpriseService) {}
 
   @Post()
-  create(@Body() createEnterpriseDto: CreateEnterpriseDto) {
-    return this.enterpriseService.create(createEnterpriseDto);
+  create(@Body() createEnterpriseDto: CreateEnterpriseDto, @User() user) {
+    return this.enterpriseService.create(createEnterpriseDto, user);
   }
 
   @Get()

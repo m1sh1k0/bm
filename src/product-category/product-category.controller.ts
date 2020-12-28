@@ -22,7 +22,7 @@ import {
 
 @ApiTags('Category')
 @ApiBearerAuth()
-@Controller('enterpeise/point/store/product/category')
+@Controller('enterprise/point/store/product/category')
 export class ProductCategoryController {
   constructor(
     private readonly productCategoryService: ProductCategoryService,
