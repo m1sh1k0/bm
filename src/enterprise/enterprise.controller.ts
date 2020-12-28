@@ -17,7 +17,7 @@ import { EnterpriseService } from './enterprise.service';
 import { CreateEnterpriseDto } from './dto/create-enterprise.dto';
 import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
-import { User } from 'src/user/user.decorator';
+import { ReqUser } from 'src/user/user.decorator';
 
 @ApiTags('Enterprise')
 @ApiBearerAuth()
@@ -27,7 +27,7 @@ export class EnterpriseController {
   constructor(private readonly enterpriseService: EnterpriseService) {}
 
   @Post()
-  create(@Body() createEnterpriseDto: CreateEnterpriseDto, @User() user) {
+  create(@Body() createEnterpriseDto: CreateEnterpriseDto, @ReqUser() user) {
     return this.enterpriseService.create(createEnterpriseDto, user);
   }
 
