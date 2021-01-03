@@ -8,9 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
 import { PointModule } from './point/point.module';
 import { EnterpriseModule } from './enterprise/enterprise.module';
+import { StoreModule } from './store/store.module';
 import { ProductModule } from './product/product.module';
-import { ProductStoreModule } from './product-store/product-store.module';
-import { ProductCategoryModule } from './product-category/product-category.module';
 
 @Module({
   imports: [
@@ -19,11 +18,10 @@ import { ProductCategoryModule } from './product-category/product-category.modul
     SharedModule,
     UserModule,
     AuthModule,
-    EnterpriseModule,
-    PointModule,
-    ProductStoreModule,
     ProductModule,
-    ProductCategoryModule,
+    StoreModule,
+    PointModule,
+    EnterpriseModule,
   ],
   controllers: [AppController],
   providers: [AppService],

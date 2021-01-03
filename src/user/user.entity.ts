@@ -9,7 +9,7 @@ export class User extends BaseEntity implements IUser {
   @Column({ unique: true })
   public email: string;
 
-  @Column()
+  @Column({ select: false })
   public password: string;
 
   @OneToMany(
@@ -17,9 +17,4 @@ export class User extends BaseEntity implements IUser {
     photo => photo.user,
   )
   enterprises: Enterprise[];
-
-  public static serealize(user: IUser) {
-    delete user.password;
-    return user;
-  }
 }

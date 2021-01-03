@@ -8,8 +8,6 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -19,16 +17,18 @@ import {
   ApiTags,
   ApiConsumes,
 } from '@nestjs/swagger';
+import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 @ApiTags('Product')
 @ApiBearerAuth()
-@Controller('enterpeise/point/store/product')
+@Controller('enterprise/point/store/product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productService.create(createProductDto);
+  create(@Body() createProductCategoryDto: CreateProductDto) {
+    return this.productService.create(createProductCategoryDto);
   }
 
   @Get()
@@ -42,8 +42,11 @@ export class ProductController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productService.update(+id, updateProductDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateProductCategoryDto: UpdateProductDto,
+  ) {
+    return this.productService.update(+id, updateProductCategoryDto);
   }
 
   @Delete(':id')

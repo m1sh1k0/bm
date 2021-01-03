@@ -33,7 +33,7 @@ export class AuthService {
       this.configService.SALT_ROUNDS,
     );
 
-    const user = User.serealize(await this.userRepository.save(authDto));
+    const user = await this.userRepository.save(authDto);
     const token = this.jwtService.sign(classToPlain(user));
 
     return {
@@ -43,26 +43,33 @@ export class AuthService {
   }
 
   public async login(authDto: AuthDto) {
-    const dbUser = await this.userRepository.findOne({ email: authDto.email });
+    const user = await this.userRepository.findOne(
+      {
+        email: authDto.email,
+      },
+      {
+        select: ['password'],
+      },
+    );
 
-    if (!dbUser) {
+    if (!user) {
       throw new AuthExceptions.InvalidCredentials();
     }
 
-    const passwordMatch = await bcrypt.compare(
-      authDto.password,
-      dbUser.password,
-    );
+    const passwordMatch = await bcrypt.compare(authDto.password, user.password);
 
     if (!passwordMatch) {
       throw new AuthExceptions.InvalidCredentials();
     }
 
-    const user = User.serealize(dbUser);
-    const token = this.jwtService.sign(classToPlain(user));
+    const authUser = await this.userRepository.findOne({
+      email: authDto.email,
+    });
+
+    const token = this.jwtService.sign(classToPlain(authUser));
 
     return {
-      user,
+      user: authUser,
       token,
     };
   }

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserEnterprise } from 'src/user/user.decorator';
 import { Repository } from 'typeorm';
 import { CreatePointDto } from './dto/create-point.dto';
 import { UpdatePointDto } from './dto/update-point.dto';
@@ -13,14 +12,8 @@ export class PointService {
     @InjectRepository(Point)
     private readonly pointRepository: Repository<Point>,
   ) {}
-  async create(createPointDto: CreatePointDto, @UserEnterprise() enterprise) {
-    console.log(enterprise);
-
-    const point = new Point();
-    const data = { ...createPointDto, enterprise };
-    Object.assign(point, data);
-
-    return await this.pointRepository.save(point);
+  async create(dto: CreatePointDto) {
+    return await this.pointRepository.save(dto).catch(err => err);
   }
 
   async findAll() {

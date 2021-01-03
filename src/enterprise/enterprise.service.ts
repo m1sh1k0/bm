@@ -5,7 +5,6 @@ import { UpdateEnterpriseDto } from './dto/update-enterprise.dto';
 import { Enterprise } from './entities/enterprise.entity';
 import { EnterpriseExceptions } from './enterprise.exeptions';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/user.entity';
 
 @Injectable()
 export class EnterpriseService {
@@ -13,36 +12,50 @@ export class EnterpriseService {
     @InjectRepository(Enterprise)
     private readonly enterpriseRepository: Repository<Enterprise>,
   ) {}
-  async create(createEnterpriseDto: CreateEnterpriseDto, user: User) {
+  async create(user: number, createEnterpriseDto: CreateEnterpriseDto) {
     const enterprise = new Enterprise();
     const data = { ...createEnterpriseDto, user };
     Object.assign(enterprise, data);
 
-    return await this.enterpriseRepository.save(enterprise);
+    return await this.enterpriseRepository.save(enterprise).catch(err => err);
   }
 
-  async findAll() {
-    return await this.enterpriseRepository.findAndCount({
+  async findAll(userId: number) {
+    const [data, count] = await this.enterpriseRepository.findAndCount({
       relations: ['user'],
+      where: { user: { id: userId } },
     });
+    return { data, count };
   }
 
-  async findOne(id: number) {
+  async findOne(userId, id: number) {
     const enterprise = await this.enterpriseRepository.findOne(id, {
       relations: ['user'],
+      where: { user: { id: userId } },
     });
     if (!enterprise) new EnterpriseExceptions.EnterpriseNotFound(id);
     return enterprise;
   }
 
-  async update(id: number, updateEnterpriseDto: UpdateEnterpriseDto) {
-    const enterprise = await this.enterpriseRepository.findOne(id);
+  async update(userId, id: number, updateEnterpriseDto: UpdateEnterpriseDto) {
+    const enterprise = await this.enterpriseRepository.findOne({
+      where: { user: { id: userId } },
+    });
     if (!enterprise) new EnterpriseExceptions.EnterpriseNotFound(id);
     Object.assign(enterprise, updateEnterpriseDto);
     return await this.enterpriseRepository.save(enterprise);
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} enterprise`;
+  async remove(userId, id: number) {
+    const enterprise = await this.enterpriseRepository.findOne(id, {
+      relations: ['user'],
+      where: {
+        id,
+        user: { id: userId },
+      },
+    });
+    if (!enterprise) new EnterpriseExceptions.EnterpriseNotFound(id);
+    await this.enterpriseRepository.delete(id);
+    return { message: `Enterprise with ID ${id} deleted` };
   }
 }

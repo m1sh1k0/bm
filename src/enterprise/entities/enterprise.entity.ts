@@ -1,6 +1,6 @@
 import { Point } from 'src/point/entities/point.entity';
 import { User } from 'src/user/user.entity';
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../shared/base.entity';
 import { IEnterprise } from './enterprise';
 
@@ -22,6 +22,9 @@ export class Enterprise extends BaseEntity implements IEnterprise {
     () => User,
     user => user.enterprises,
   )
+  @JoinColumn({
+    referencedColumnName: 'id',
+  })
   user: User;
 
   @OneToMany(
